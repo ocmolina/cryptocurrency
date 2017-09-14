@@ -16,8 +16,8 @@ function loadPorftolio() {
 	sec = 59;
     createXMLHttpRequest()
     var nonce = Math.floor(Date.now()/1000)
-    var secret = "5685841efdef40a79ae691ffe5f03e50"
-    var apiKey = "c1d10731e465421eb194ae784ebbcbd3"
+    var secret = "secret"
+    var apiKey = "apikey"
     var url = "https://bittrex.com/api/v1.1/account/getbalances?apikey="+apiKey+"&nonce="+nonce;
     var sign = CryptoJS.HmacSHA512(url, secret);
     xmlhttp.onreadystatechange = loadPortfolioResponse;
