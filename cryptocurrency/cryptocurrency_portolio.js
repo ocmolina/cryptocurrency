@@ -40,7 +40,7 @@ function displayPortfolio(portfolio) {
     }
     var currencies = []
     var table = "<table border=1>";
-    table += "<tr><th>CURRENCY</th><th>BALANCE</th><th>PRICE BTC</th><th>ESTIMATED IN BTC</th><th>PRICE USD</th></th><th>ESTIMATED IN USD</th></tr>"
+    table += "<tr><th>CURRENCY</th><th>BALANCE</th><th>PRICE BTC</th><th>ESTIMATED IN BTC</th><th>PRICE USD</th></th><th>ESTIMATED IN USD</th><th>% 1h</th><th>% 24h</th><th>% 7d</th></tr>"
     var color = "#e6f2ff"
     var changeColor = true;
     for(var i = 0; i < portfolio["result"].length; i++) {
@@ -59,6 +59,9 @@ function displayPortfolio(portfolio) {
     		table += "<td id='"+portfolio["result"][i]["Currency"] +"_BTC'></td>";
     		table += "<td id='"+portfolio["result"][i]["Currency"] +"_PRICE_USD'></td>";
     		table += "<td id='"+portfolio["result"][i]["Currency"] +"_USD'></td>";
+    		table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_1H'></td>";
+    		table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_24H'></td>";
+    		table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_7D'></td>";
     		table += "</tr>"
     	}
     }
@@ -88,6 +91,13 @@ function updateCurrenciesEstimates(currencies, ticker) {
 			if(ticker[j]["symbol"] == currencies[i]["Currency"]) {
 
 				document.getElementById(currencies[i]["Currency"]+"_PRICE_USD").appendChild(document.createTextNode(""+ticker[j]["price_usd"]));
+                document.getElementById(currencies[i]["Currency"]+"_CHANGE_1H").appendChild(document.createTextNode(""+ticker[j]["percent_change_1h"]));
+                document.getElementById(currencies[i]["Currency"]+"_CHANGE_24H").appendChild(document.createTextNode(""+ticker[j]["percent_change_24h"]));
+                document.getElementById(currencies[i]["Currency"]+"_CHANGE_7D").appendChild(document.createTextNode(""+ticker[j]["percent_change_7d"]));
+
+                appendStatusArrow(currencies[i]["Currency"]+"_CHANGE_1H", ticker[j]["percent_change_1h"]);
+                appendStatusArrow(currencies[i]["Currency"]+"_CHANGE_24H", ticker[j]["percent_change_24h"]);
+                appendStatusArrow(currencies[i]["Currency"]+"_CHANGE_7D", ticker[j]["percent_change_7d"]);
 
 				var usd = document.getElementById(currencies[i]["Currency"]+"_USD");
 				var usdValue = ticker[j]["price_usd"] * currencies[i]["Balance"];
@@ -102,10 +112,6 @@ function updateCurrenciesEstimates(currencies, ticker) {
                 	portfolioCurrencies[ticker[j]["symbol"]] = [ticker[j]["price_btc"], ticker[j]["price_usd"], Math.floor(Date.now()/1000)]
                 	break;
                 }
-				appendStatusArrow(ticker[j], "price_btc", BTC_PRICE_INDEX, ""+currencies[i]["Currency"]+"_PRICE_BTC")
-				appendStatusArrow(ticker[j], "price_usd", USD_PRICE_INDEX, ""+currencies[i]["Currency"]+"_PRICE_USD")
-				portfolioCurrencies[ticker[j]["symbol"]][BTC_PRICE_INDEX] = ticker[j]["price_btc"]
-                portfolioCurrencies[ticker[j]["symbol"]][USD_PRICE_INDEX] = ticker[j]["price_usd"]
                 portfolioCurrencies[ticker[j]["symbol"]][CURRENCY_UPDATED_TIMESTAMP] = Math.floor(Date.now()/1000)
 				break;
 			}
@@ -138,15 +144,13 @@ function arrowStatusString(currentTotalsValue, lastTotalsValue) {
 	return "";
 }
 
-function appendStatusArrow(tickerItem, price, usd_btc, domElementId) {
-	if(tickerItem[price] > portfolioCurrencies[tickerItem["symbol"]][usd_btc]) {
+function appendStatusArrow(domElementId, change_value) {
+	if(change_value > 0) {
 		img_up = createImgDom("img/arrow_up_green.png");
-        img_up.title = "" + calculatePtcChange(tickerItem[price], portfolioCurrencies[tickerItem["symbol"]][usd_btc])
 		document.getElementById(domElementId).appendChild(img_up);
 	}
-	else if(tickerItem[price] < portfolioCurrencies[tickerItem["symbol"]][usd_btc]) {
+	else if(change_value < 0) {
 		img_dwn = createImgDom("img/down.jpg");
-        img_dwn.title = "" + calculatePtcChange(tickerItem[price], portfolioCurrencies[tickerItem["symbol"]][usd_btc])
 		document.getElementById(domElementId).appendChild(img_dwn);
 	}
 }
