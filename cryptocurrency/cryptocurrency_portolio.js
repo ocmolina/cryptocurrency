@@ -15,15 +15,9 @@ function loadPorftolio() {
 	min = 4;
 	sec = 59;
     createXMLHttpRequest()
-    var nonce = Math.floor(Date.now()/1000)
-    var secret = "secret"
-    var apiKey = "apikey"
-    var url = "https://bittrex.com/api/v1.1/account/getbalances?apikey="+apiKey+"&nonce="+nonce;
-    var sign = CryptoJS.HmacSHA512(url, secret);
+    var url = "portfolio.json";
     xmlhttp.onreadystatechange = loadPortfolioResponse;
     xmlhttp.open("GET", url, true);
-    xmlhttp.setRequestHeader("apisign",sign);
-    xmlhttp.setRequestHeader("Cache-Control","no-cache")
     xmlhttp.send(null)
 }
 
@@ -71,7 +65,7 @@ function displayPortfolio(portfolio) {
 
 function updateBTCAndUSDEstimates(currencies) {
     createXMLHttpRequest()
-    var url = "https://api.coinmarketcap.com/v1/ticker/";
+    var url = "market_status.json";
     xmlhttp.onreadystatechange = function() {
     	if (this.readyState == 4 && this.status == 200) {
     		var ticker = JSON.parse(this.responseText)
@@ -79,7 +73,6 @@ function updateBTCAndUSDEstimates(currencies) {
     	}
     }
     xmlhttp.open("GET", url, true);
-    xmlhttp.setRequestHeader("Cache-Control","no-cache")
     xmlhttp.send(null);
 }
 
