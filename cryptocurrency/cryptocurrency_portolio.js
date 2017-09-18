@@ -18,6 +18,7 @@ function loadPorftolio() {
     var url = "portfolio.json";
     xmlhttp.onreadystatechange = loadPortfolioResponse;
     xmlhttp.open("GET", url, true);
+    xmlhttp.setRequestHeader("Cache-Control","no-cache")
     xmlhttp.send(null)
 }
 
@@ -73,6 +74,7 @@ function updateBTCAndUSDEstimates(currencies) {
     	}
     }
     xmlhttp.open("GET", url, true);
+    xmlhttp.setRequestHeader("Cache-Control","no-cache")
     xmlhttp.send(null);
 }
 
