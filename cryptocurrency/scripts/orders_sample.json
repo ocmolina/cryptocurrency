@@ -1,0 +1,23 @@
+{
+	"success":true,
+	"message":"",
+	"result":[
+		{
+		    "OrderUuid":"uuid",
+	        "Exchange":"BTC-EDG",
+            "TimeStamp":"2017-09-18T17:56:54",
+            "OrderType":"LIMIT_BUY",
+            "Limit":0.00025910,
+            "Quantity":9.59940718,
+            "QuantityRemaining":0.00000000,
+            "Commission":0.00000621,
+            "Price":0.00248720,
+            "PricePerUnit":0.00025909000000000000,
+            "IsConditional":false,
+            "Condition":"NONE",
+            "ConditionTarget":null,
+            "ImmediateOrCancel":false,
+            "Closed":"2017-09-18T17:57:03.187"
+        }
+    ]
+}
