@@ -7,16 +7,16 @@ import time
 def main():
     parser = argparse.ArgumentParser(description="download portfolio and state of the market")
     parser.add_argument("--path", type=str, required=True)
+    parser.add_argument("--api_key", type=str, required=True)
+    parser.add_argument("--secret", type=str, required=True)
     args = parser.parse_args()
-    get_portfolio(args.path)
+    get_portfolio(args.path, args.api_key, args.secret)
     get_coinmarketcap_stats(args.path)
-    get_order_history(args.path)
+    #  get_order_history(args.path)
 
 
-def bittrex_request(operation):
+def bittrex_request(operation, api_key, secret):
     nonce = int(time.time())
-    api_key = "apiKey"
-    secret = "secret"
     url = "https://bittrex.com/api/v1.1/account/{}?apikey={}&nonce={}".format(operation, api_key, nonce)
     sign = hmac.new(secret, url, hashlib.sha512)
     headers = {
@@ -25,16 +25,16 @@ def bittrex_request(operation):
     }
     return url, headers
 
-def get_portfolio(path):
-    url, headers = bittrex_request("getbalances")
+def get_portfolio(path, api_key, secret):
+    url, headers = bittrex_request("getbalances", api_key, secret)
     file_name = "{}/portfolio.json".format(path)
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         save(file_name, response.text)
 
 
-def get_order_history(path):
-    url, headers = bittrex_request("getorderhistory")
+def get_order_history(path, api_key, secret):
+    url, headers = bittrex_request("getorderhistory", api_key, secret)
     file_name = "{}/orders.json".format(path)
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
