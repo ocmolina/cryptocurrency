@@ -1,3 +1,2 @@
 # ignore
-market_status.json
-portfolio.json
+*.json

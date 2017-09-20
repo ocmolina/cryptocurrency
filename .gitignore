@@ -1,3 +1,2 @@
 # ignore
-cryptocurrency/market_status.json
-cryptocurrency/portfolio.json
+cryptocurrency/*.json
