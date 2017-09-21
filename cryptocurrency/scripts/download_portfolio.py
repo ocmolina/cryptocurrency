@@ -12,7 +12,7 @@ def main():
     args = parser.parse_args()
     get_portfolio(args.path, args.api_key, args.secret)
     get_coinmarketcap_stats(args.path)
-    #  get_order_history(args.path)
+    get_order_history(args.path, args.api_key, args.secret)
 
 
 def bittrex_request(operation, api_key, secret):
