@@ -45,11 +45,15 @@ function displayPortfolio(portfolio) {
             currencies.push(portfolio["result"][i])
             if(changeColor) {
                 table += "<tr bgcolor='" + color + "'>";
-                transactionsTable += "<tr bgcolor='" + color + "'>";
+                if(portfolio["result"][i]["Currency"] != "BTC") {
+                    transactionsTable += "<tr bgcolor='" + color + "'>";
+                }
             }
             else {
                 table += "<tr>"
-                transactionsTable += "<tr>"
+                if(portfolio["result"][i]["Currency"] != "BTC") {
+                    transactionsTable += "<tr>";
+                }
             }
             changeColor = !changeColor;
             table += "<td>" + portfolio["result"][i]["Currency"] + "</td>";
@@ -63,14 +67,16 @@ function displayPortfolio(portfolio) {
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_7D'></td>";
             table += "</tr>"
 
-            transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_DATE'></td>";
-            transactionsTable += "<td>" + portfolio["result"][i]["Currency"] + "</td>";
-            transactionsTable += "<td>" + portfolio["result"][i]["Balance"] + "</td>";
-            transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_ACQUIRED_PRICE_BTC'></td>";
-            transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_CURRENT_PRICE_BTC'></td>";
-            transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_PRICE_DIFF_BTC'></td>";
-            transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_PRICE_PTC_DIFF_BTC'></td>";
-            transactionsTable += "</tr>"
+            if(portfolio["result"][i]["Currency"] != "BTC") {
+                transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_DATE'></td>";
+                transactionsTable += "<td>" + portfolio["result"][i]["Currency"] + "</td>";
+                transactionsTable += "<td>" + portfolio["result"][i]["Balance"] + "</td>";
+                transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_ACQUIRED_PRICE_BTC'></td>";
+                transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_CURRENT_PRICE_BTC'></td>";
+                transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_PRICE_DIFF_BTC'></td>";
+                transactionsTable += "<td id='" + portfolio["result"][i]["Currency"] + "_PRICE_PTC_DIFF_BTC'></td>";
+                transactionsTable += "</tr>";
+            }
         }
     }
     document.getElementById("container").innerHTML = table;
@@ -113,7 +119,9 @@ function updateCurrenciesEstimates(currencies, ticker) {
                 totalUSD += usdValue;
                 usd.appendChild(document.createTextNode(""+ usdValue));
                 document.getElementById(currencies[i]["Currency"]+"_PRICE_BTC").appendChild(document.createTextNode(""+ticker[j]["price_btc"]));
-                document.getElementById(currencies[i]["Currency"]+"_CURRENT_PRICE_BTC").appendChild(document.createTextNode(""+ticker[j]["price_btc"]));
+                if(ticker[j]["symbol"] != "BTC") {
+                    document.getElementById(currencies[i]["Currency"]+"_CURRENT_PRICE_BTC").appendChild(document.createTextNode(""+ticker[j]["price_btc"]));
+                }
                 var btc = document.getElementById(currencies[i]["Currency"]+"_BTC");
                 var btcValue = ticker[j]["price_btc"] * currencies[i]["Balance"];
                 totalBTC += btcValue;
@@ -164,7 +172,7 @@ function updateTransactions(currencies, ticker) {
                         var diff = ticker[j]["price_btc"] - exchanges[ticker[j]["symbol"]]["PricePerUnit"]
                         var ptcDiff = 100*((ticker[j]["price_btc"] - exchanges[ticker[j]["symbol"]]["PricePerUnit"])/exchanges[ticker[j]["symbol"]]["PricePerUnit"])
                         document.getElementById(""+ticker[j]["symbol"]+"_PRICE_DIFF_BTC").appendChild(document.createTextNode(""+diff))
-                        document.getElementById(""+ticker[j]["symbol"]+"_PRICE_PTC_DIFF_BTC").appendChild(document.createTextNode(""+ptcDiff))
+                        document.getElementById(""+ticker[j]["symbol"]+"_PRICE_PTC_DIFF_BTC").appendChild(document.createTextNode(""+ptcDiff.toFixed(2)))
                         appendStatusArrow(""+ticker[j]["symbol"]+"_PRICE_DIFF_BTC", diff)
                         appendStatusArrow(""+ticker[j]["symbol"]+"_PRICE_PTC_DIFF_BTC", ptcDiff)
                         break;
