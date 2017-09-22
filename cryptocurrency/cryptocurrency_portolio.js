@@ -239,10 +239,10 @@ function start() {
 
 function refreshTime() {
     if(sec >= 10) {
-        document.getElementById("reload").innerHTML = "<p>" + min + ":" + sec + " </p>";
+        document.getElementById("reload").innerHTML = "<p>Reload - " + min + ":" + sec + " </p>";
     }
     else {
-        document.getElementById("reload").innerHTML = "<p>" + min + ":0" + sec + " </p>";
+        document.getElementById("reload").innerHTML = "<p>Reload - " + min + ":0" + sec + " </p>";
     }
     sec--;
     if(sec < 0) {
