@@ -117,7 +117,7 @@ function updateCurrenciesEstimates(currencies, ticker) {
                 var usd = document.getElementById(currencies[i]["Currency"]+"_USD");
                 var usdValue = ticker[j]["price_usd"] * currencies[i]["Balance"];
                 totalUSD += usdValue;
-                usd.appendChild(document.createTextNode(""+ usdValue));
+                usd.appendChild(document.createTextNode(""+ usdValue.toFixed(2)));
                 document.getElementById(currencies[i]["Currency"]+"_PRICE_BTC").appendChild(document.createTextNode(""+ticker[j]["price_btc"]));
                 if(ticker[j]["symbol"] != "BTC") {
                     document.getElementById(currencies[i]["Currency"]+"_CURRENT_PRICE_BTC").appendChild(document.createTextNode(""+ticker[j]["price_btc"]));
@@ -125,7 +125,7 @@ function updateCurrenciesEstimates(currencies, ticker) {
                 var btc = document.getElementById(currencies[i]["Currency"]+"_BTC");
                 var btcValue = ticker[j]["price_btc"] * currencies[i]["Balance"];
                 totalBTC += btcValue;
-                btc.appendChild(document.createTextNode(""+ btcValue));
+                btc.appendChild(document.createTextNode(""+ btcValue.toFixed(8)));
                 if (portfolioCurrencies[ticker[j]["symbol"]] == null) {
                     portfolioCurrencies[ticker[j]["symbol"]] = [ticker[j]["price_btc"], ticker[j]["price_usd"], Math.floor(Date.now()/1000)]
                     break;
