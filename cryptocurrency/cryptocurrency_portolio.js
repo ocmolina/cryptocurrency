@@ -135,6 +135,7 @@ function updateCurrenciesEstimates(currencies, ticker) {
             }
         }
     }
+    document.getElementById("today").innerHTML = "<p> TODAY: " + new Date().toISOString() + "</p>";
     if(portfolioCurrencies["totals"] == null) {
         portfolioCurrencies["totals"] = [totalBTC, totalUSD, Math.floor(Date.now()/1000)];
         document.getElementById("totals").innerHTML = "<p> BTC: " + totalBTC + " USD: " + totalUSD + "</p>";
@@ -161,10 +162,13 @@ function updateTransactions(currencies, ticker) {
         if (this.readyState == 4 && this.status == 200) {
             var orders = JSON.parse(this.responseText)
             exchanges = exchangesMap(orders["result"])
-            for(i = 0; i < currencies.length; i++){
+            for(i = 0; i < currencies.length; i++) {
                 for(j=0; j< ticker.length; j++) {
-                    if(ticker[j]["symbol"] == currencies[i]["Currency"]){
-                        if(exchanges[ticker[j]["symbol"]] == null){
+                    if(ticker[j]["symbol"] == currencies[i]["Currency"]) {
+                        if(exchanges[ticker[j]["symbol"]] == null) {
+                            if(ticker[j]["symbol"] != "BTC") {
+                                updateTransactionFromHistoryCSV(ticker[j])
+                            }
                             break;
                         }
                         document.getElementById(""+ticker[j]["symbol"]+"_DATE").appendChild(document.createTextNode(""+exchanges[ticker[j]["symbol"]]["TimeStamp"]))
@@ -184,6 +188,26 @@ function updateTransactions(currencies, ticker) {
     xmlhttp.open("GET", url, true);
     xmlhttp.setRequestHeader("Cache-Control","no-cache")
     xmlhttp.send(null);
+}
+
+function updateTransactionFromHistoryCSV(tickerItem) {
+    var xmlhttpReq = new XMLHttpRequest();
+    var url = "http://131.153.38.104:5000/get_last_transaction/BTC-" +tickerItem["symbol"]
+    xmlhttpReq.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var order = JSON.parse(this.responseText)
+            document.getElementById(""+tickerItem["symbol"]+"_DATE").appendChild(document.createTextNode(""+order["date"]))
+            document.getElementById(""+tickerItem["symbol"]+"_ACQUIRED_PRICE_BTC").appendChild(document.createTextNode(""+order["price"]))
+            var diff = tickerItem["price_btc"] - order["price"]
+            var ptcDiff = 100*((tickerItem["price_btc"] - order["price"])/order["price"])
+            document.getElementById(""+tickerItem["symbol"]+"_PRICE_DIFF_BTC").appendChild(document.createTextNode(""+diff))
+            document.getElementById(""+tickerItem["symbol"]+"_PRICE_PTC_DIFF_BTC").appendChild(document.createTextNode(""+ptcDiff.toFixed(2)))
+            appendStatusArrow(""+tickerItem["symbol"]+"_PRICE_DIFF_BTC", diff)
+            appendStatusArrow(""+tickerItem["symbol"]+"_PRICE_PTC_DIFF_BTC", ptcDiff)
+        } 
+    }
+    xmlhttpReq.open("GET", url, true);
+    xmlhttpReq.send(null);
 }
 
 function exchangesMap(all_orders) {
