@@ -6,6 +6,7 @@ var BTC_PRICE_INDEX = 0;
 var USD_PRICE_INDEX = 1;
 var CURRENCY_UPDATED_TIMESTAMP = 2;
 var portfolioCurrencies = {};
+var usdInvestedToDate = 371.95;
 
 function createXMLHttpRequest() {
     xmlhttp = new XMLHttpRequest();
@@ -136,6 +137,10 @@ function updateCurrenciesEstimates(currencies, ticker) {
         }
     }
     document.getElementById("today").innerHTML = "<p> TODAY: " + new Date().toISOString() + "</p>";
+    var investPtcDiff = 100 * (totalUSD - usdInvestedToDate)/usdInvestedToDate
+    var investDifHtml = "<p> Invested USD: $" + usdInvestedToDate + " Gain: $" + (totalUSD - usdInvestedToDate).toFixed(2) + arrowStatusString(usdInvestedToDate, totalUSD) + 
+    " % Gain: " + investPtcDiff.toFixed(2)  + "% " + arrowStatusString(usdInvestedToDate, totalUSD)  + " </p>";
+    document.getElementById("invest_diff").innerHTML = investDifHtml;
     if(portfolioCurrencies["totals"] == null) {
         portfolioCurrencies["totals"] = [totalBTC, totalUSD, Math.floor(Date.now()/1000)];
         document.getElementById("totals").innerHTML = "<p> BTC: " + totalBTC.toFixed(8) + " USD: " + totalUSD.toFixed(2) + "</p>";
@@ -192,14 +197,14 @@ function updateTransactions(currencies, ticker) {
 
 function updateTransactionFromHistoryCSV(tickerItem) {
     var xmlhttpReq = new XMLHttpRequest();
-    var url = "http://131.153.38.104:5000/get_last_transaction/BTC-" +tickerItem["symbol"]
+    var url = "http://131.153.38.104:5000/api/get_last_transaction/BTC-" +tickerItem["symbol"]
     xmlhttpReq.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var order = JSON.parse(this.responseText)
-            document.getElementById(""+tickerItem["symbol"]+"_DATE").appendChild(document.createTextNode(""+order["date"]))
-            document.getElementById(""+tickerItem["symbol"]+"_ACQUIRED_PRICE_BTC").appendChild(document.createTextNode(""+order["price"]))
-            var diff = tickerItem["price_btc"] - order["price"]
-            var ptcDiff = 100*((tickerItem["price_btc"] - order["price"])/order["price"])
+            document.getElementById(""+tickerItem["symbol"]+"_DATE").appendChild(document.createTextNode(""+order[0]["date"]))
+            document.getElementById(""+tickerItem["symbol"]+"_ACQUIRED_PRICE_BTC").appendChild(document.createTextNode(""+order[0]["price"]))
+            var diff = tickerItem["price_btc"] - order[0]["price"]
+            var ptcDiff = 100*((tickerItem["price_btc"] - order[0]["price"])/order[0]["price"])
             document.getElementById(""+tickerItem["symbol"]+"_PRICE_DIFF_BTC").appendChild(document.createTextNode(""+diff.toFixed(8)))
             document.getElementById(""+tickerItem["symbol"]+"_PRICE_PTC_DIFF_BTC").appendChild(document.createTextNode(""+ptcDiff.toFixed(2)))
             appendStatusArrow(""+tickerItem["symbol"]+"_PRICE_DIFF_BTC", diff)
