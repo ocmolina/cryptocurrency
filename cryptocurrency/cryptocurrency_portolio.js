@@ -37,7 +37,7 @@ function displayPortfolio(portfolio) {
     var currencies = []
     var table = "<table border=1>";
     var transactionsTable = "<table border=1>"
-    table += "<tr><th>CURRENCY</th><th>BALANCE</th><th>PRICE BTC</th><th>ESTIMATED IN BTC</th><th>PRICE USD</th></th><th>ESTIMATED IN USD</th><th>% 1h</th><th>% 24h</th><th>% 7d</th></tr>"
+    table += "<tr><th>CURRENCY</th><th>BALANCE</th><th>PRICE BTC</th><th>ESTIMATED IN BTC</th><th>PRICE USD</th></th><th>ESTIMATED IN USD</th><th>MARKET CAP USD</th><th>% 1h</th><th>% 24h</th><th>% 7d</th></tr>"
     transactionsTable += "<tr><th>DATE</th><th>CURRENCY</th><th>BALANCE</th><th>ACQUIRED BTC PRICE</th><th>CURRENT PRICE BTC</th><th>DIFF</th><th>% DIFF</th></tr>"
     var color = "#e6f2ff"
     var changeColor = true;
@@ -63,6 +63,7 @@ function displayPortfolio(portfolio) {
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_BTC'></td>";
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_PRICE_USD'></td>";
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_USD'></td>";
+            table += "<td id='"+portfolio["result"][i]["Currency"] +"_MARKET_CAP'></td>";
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_1H'></td>";
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_24H'></td>";
             table += "<td id='"+portfolio["result"][i]["Currency"] +"_CHANGE_7D'></td>";
@@ -107,6 +108,7 @@ function updateCurrenciesEstimates(currencies, ticker) {
             if(ticker[j]["symbol"] == currencies[i]["Currency"]) {
 
                 document.getElementById(currencies[i]["Currency"]+"_PRICE_USD").appendChild(document.createTextNode(""+ticker[j]["price_usd"]));
+                document.getElementById(currencies[i]["Currency"]+"_MARKET_CAP").appendChild(document.createTextNode(""+ticker[j]["market_cap_usd"]));
                 document.getElementById(currencies[i]["Currency"]+"_CHANGE_1H").appendChild(document.createTextNode(""+ticker[j]["percent_change_1h"]));
                 document.getElementById(currencies[i]["Currency"]+"_CHANGE_24H").appendChild(document.createTextNode(""+ticker[j]["percent_change_24h"]));
                 document.getElementById(currencies[i]["Currency"]+"_CHANGE_7D").appendChild(document.createTextNode(""+ticker[j]["percent_change_7d"]));
